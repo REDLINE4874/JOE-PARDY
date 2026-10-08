@@ -1,1501 +1,654 @@
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>JoyParty</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #101828;
-            color: white;
-            text-align: center;
-        }
-
-        /* =========================
-           ENCABEZADO
-        ========================= */
-
-        header {
-            padding: 20px;
-        }
-
-        h1 {
-            margin: 5px;
-            font-size: 42px;
-        }
-
-
-        /* =========================
-           EQUIPOS
-        ========================= */
-
-        #equipos {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-
-            padding: 10px 20px;
-        }
-
-        .equipo {
-
-            background: #172554;
-
-            border: 2px solid #2563EB;
-
-            border-radius: 12px;
-
-            min-width: 150px;
-
-            padding: 12px;
-
-            cursor: pointer;
-
-            transition: 0.2s;
-        }
-
-        .equipo:hover {
-            transform: scale(1.05);
-        }
-
-        .equipo.activo {
-
-            border: 3px solid #22C55E;
-
-            background: #1E3A8A;
-
-            box-shadow: 0 0 15px rgba(34,197,94,0.5);
-        }
-
-        .nombre-equipo {
-
-            font-size: 18px;
-
-            font-weight: bold;
-        }
-
-        .puntuacion {
-
-            font-size: 28px;
-
-            margin-top: 5px;
-
-            color: #4ADE80;
-        }
-
-
-        /* =========================
-           BOTONES
-        ========================= */
-
-        .controles {
-
-            margin: 15px;
-        }
-
-        button {
-
-            border: none;
-
-            padding: 12px 20px;
-
-            margin: 5px;
-
-            border-radius: 8px;
-
-            cursor: pointer;
-
-            font-size: 16px;
-
-            font-weight: bold;
-        }
-
-        .btn-nuevo {
-
-            background: #2563EB;
-
-            color: white;
-        }
-
-        .btn-reiniciar {
-
-            background: #EF4444;
-
-            color: white;
-        }
-
-
-        /* =========================
-           TABLERO
-        ========================= */
-
-        .tablero {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(7, 1fr);
-
-            gap: 8px;
-
-            padding: 20px;
-
-            max-width: 1400px;
-
-            margin: auto;
-        }
-
-
-        .categoria {
-
-            background: #185FA5;
-
-            padding: 15px 5px;
-
-            min-height: 80px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-weight: bold;
-
-            font-size: 16px;
-
-            border-radius: 8px;
-        }
-
-
-        .puntos {
-
-            background: #0C447C;
-
-            padding: 25px 5px;
-
-            font-size: 28px;
-
-            font-weight: bold;
-
-            border-radius: 8px;
-
-            cursor: pointer;
-
-            transition: 0.2s;
-        }
-
-        .puntos:hover {
-
-            background: #1976D2;
-
-            transform: scale(1.03);
-        }
-
-
-        /* Pregunta utilizada */
-
-        .puntos.usado {
-
-            background: #374151;
-
-            color: #6B7280;
-
-            cursor: not-allowed;
-
-            transform: none;
-
-        }
-
-
-        /* =========================
-           MODAL
-        ========================= */
-
-        .modal {
-
-            display: none;
-
-            position: fixed;
-
-            inset: 0;
-
-            background:
-                rgba(0,0,0,0.85);
-
-            align-items: center;
-
-            justify-content: center;
-
-            padding: 20px;
-
-            z-index: 1000;
-        }
-
-
-        .pregunta {
-
-            background: #172554;
-
-            padding: 40px;
-
-            border-radius: 15px;
-
-            max-width: 750px;
-
-            width: 100%;
-        }
-
-
-        .pregunta h2 {
-
-            color: #60A5FA;
-
-            font-size: 32px;
-        }
-
-
-        .pregunta-texto {
-
-            font-size: 28px;
-
-            margin: 30px 0;
-        }
-
-
-        .respuesta {
-
-            display: none;
-
-            font-size: 25px;
-
-            color: #4ADE80;
-
-            margin: 20px 0;
-        }
-
-
-        .btn-respuesta {
-
-            background: #2563EB;
-
-            color: white;
-        }
-
-
-        .btn-correcto {
-
-            background: #22C55E;
-
-            color: white;
-
-            display: none;
-        }
-
-
-        .btn-incorrecto {
-
-            background: #EF4444;
-
-            color: white;
-
-            display: none;
-        }
-
-
-        .btn-cerrar {
-
-            background: #6B7280;
-
-            color: white;
-        }
-
-
-        /* =========================
-           CONFIGURACIÓN EQUIPOS
-        ========================= */
-
-        #configEquipos {
-
-            display: none;
-
-            position: fixed;
-
-            inset: 0;
-
-            background:
-                rgba(0,0,0,0.9);
-
-            align-items: center;
-
-            justify-content: center;
-
-            z-index: 2000;
-
-            padding: 20px;
-        }
-
-
-        .config {
-
-            background: #172554;
-
-            padding: 30px;
-
-            border-radius: 15px;
-
-            width: 100%;
-
-            max-width: 500px;
-        }
-
-
-        .config h2 {
-
-            margin-top: 0;
-        }
-
-
-        .campo-equipo {
-
-            display: flex;
-
-            margin: 8px 0;
-        }
-
-
-        .campo-equipo input {
-
-            flex: 1;
-
-            padding: 12px;
-
-            border: none;
-
-            border-radius: 6px;
-
-            font-size: 16px;
-        }
-
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media(max-width:900px) {
-
-            .tablero {
-
-                grid-template-columns:
-                    repeat(4,1fr);
-            }
-
-        }
-
-
-        @media(max-width:600px) {
-
-            h1 {
-
-                font-size: 32px;
-            }
-
-            .tablero {
-
-                grid-template-columns:
-                    repeat(2,1fr);
-            }
-
-            .pregunta-texto {
-
-                font-size: 22px;
-            }
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JoyParty</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#101828;
+    color:white;
+    min-height:100vh;
+}
+
+header{
+    padding:20px;
+    text-align:center;
+    background:#0c447c;
+    box-shadow:0 4px 15px rgba(0,0,0,.3);
+}
+
+h1{
+    margin-bottom:18px;
+    font-size:clamp(28px,5vw,45px);
+}
+
+.controles{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    border-radius:8px;
+    padding:11px 18px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.btn-principal{
+    background:#185fa5;
+    color:white;
+}
+
+.btn-secundario{
+    background:#344054;
+    color:white;
+}
+
+button:hover{
+    opacity:.88;
+}
+
+#equipos{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:18px 15px;
+    background:#172033;
+}
+
+.equipo{
+    min-width:150px;
+    padding:12px 18px;
+    border:2px solid transparent;
+    border-radius:10px;
+    background:#26334a;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.equipo:hover{
+    transform:translateY(-2px);
+}
+
+.equipo.activo{
+    border-color:#ffd166;
+    box-shadow:0 0 15px rgba(255,209,102,.35);
+}
+
+.equipo .turno{
+    display:block;
+    color:#ffd166;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:4px;
+}
+
+.equipo .nombre{
+    display:block;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.equipo .score{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.tablero-wrap{
+    width:100%;
+    overflow-x:auto;
+    padding:20px;
+}
+
+.tablero{
+    min-width:1250px;
+    display:grid;
+    grid-template-columns:repeat(14,minmax(120px,1fr));
+    gap:7px;
+}
+
+.categoria{
+    background:#0c447c;
+    padding:15px 7px;
+    min-height:75px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-weight:bold;
+    border-radius:7px;
+    font-size:14px;
+}
+
+.puntos{
+    min-height:85px;
+    background:#185fa5;
+    color:#ffd166;
+    border:none;
+    border-radius:7px;
+    font-size:24px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.puntos:hover:not(.usado){
+    background:#2377c5;
+    transform:scale(1.03);
+}
+
+.puntos.usado{
+    background:#253044;
+    color:#667085;
+    cursor:not-allowed;
+    opacity:.55;
+}
+
+.modal-fondo{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    z-index:1000;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal{
+    width:min(700px,100%);
+    background:#172033;
+    border-radius:16px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+
+.modal h2{
+    color:#ffd166;
+    margin-bottom:20px;
+    font-size:32px;
+}
+
+.modal .pregunta{
+    font-size:23px;
+    line-height:1.4;
+    margin-bottom:22px;
+}
+
+.respuesta{
+    display:none;
+    background:#26334a;
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:20px;
+    font-size:20px;
+    color:#8ff0b0;
+}
+
+.botones-modal{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn-respuesta{
+    background:#344054;
+    color:white;
+}
+
+.btn-correcto{
+    background:#20a464;
+    color:white;
+}
+
+.btn-incorrecto{
+    background:#d64545;
+    color:white;
+}
+
+.btn-cerrar{
+    background:#667085;
+    color:white;
+}
+
+.config-modal{
+    width:min(600px,100%);
+    background:#172033;
+    border-radius:16px;
+    padding:28px;
+}
+
+.config-modal h2{
+    margin-bottom:10px;
+    text-align:center;
+}
+
+.config-modal p{
+    text-align:center;
+    color:#98a2b3;
+    margin-bottom:20px;
+}
+
+.inputs-equipos{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.inputs-equipos input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#26334a;
+    color:white;
+    outline:none;
+}
+
+.inputs-equipos input:focus{
+    box-shadow:0 0 0 2px #185fa5;
+}
+
+.config-botones{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:20px;
+}
+
+@media(max-width:700px){
+    .inputs-equipos{
+        grid-template-columns:1fr;
+    }
+
+    .modal{
+        padding:20px;
+    }
+
+    .modal .pregunta{
+        font-size:19px;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-
 <header>
-
     <h1>🎉 JOYPARTY 🎉</h1>
 
-    <div id="equipos"></div>
-
     <div class="controles">
-
-        <button
-            class="btn-nuevo"
-            onclick="abrirConfiguracion()">
-
+        <button class="btn-principal" onclick="abrirConfiguracion()">
             👥 Crear equipos
-
         </button>
 
-
-        <button
-            class="btn-reiniciar"
-            onclick="reiniciarJuego()">
-
+        <button class="btn-secundario" onclick="reiniciarJuego()">
             🔄 Reiniciar juego
-
         </button>
-
     </div>
-
 </header>
 
-
-
-<!-- =========================
-     TABLERO
-========================= -->
-
-<div class="tablero">
-
-
-    <!-- CATEGORÍAS -->
-
-    <div class="categoria">
-        🌎 Cultura general
-    </div>
-
-    <div class="categoria">
-        🏛️ Historia
-    </div>
-
-    <div class="categoria">
-        🎬 Películas
-    </div>
-
-    <div class="categoria">
-        📺 Series
-    </div>
-
-    <div class="categoria">
-        🎵 Música
-    </div>
-
-    <div class="categoria">
-        ⚽ Deportes
-    </div>
-
-    <div class="categoria">
-        🔬 Ciencia
-    </div>
-
-
-
-    <!-- 100 -->
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuál es el animal terrestre más grande del mundo?',
-        'Elefante africano',
-        100)">
-        100
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué civilización construyó las pirámides de Giza?',
-        'Los antiguos egipcios',
-        100)">
-        100
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cómo se llama el león protagonista de El Rey León?',
-        'Simba',
-        100)">
-        100
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cómo se llama el protagonista de The Mandalorian?',
-        'Din Djarin',
-        100)">
-        100
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué cantante es conocido como El Rey del Rock and Roll?',
-        'Elvis Presley',
-        100)">
-        100
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuántos minutos dura un partido de fútbol reglamentario?',
-        '90 minutos',
-        100)">
-        100
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué gas necesitan los seres humanos para respirar?',
-        'Oxígeno',
-        100)">
-        100
-    </div>
-
-
-
-    <!-- 200 -->
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuántos huesos tiene aproximadamente un adulto humano?',
-        '206',
-        200)">
-        200
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Quién fue el primer emperador romano?',
-        'Augusto',
-        200)">
-        200
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué actor interpretó a Iron Man?',
-        'Robert Downey Jr.',
-        200)">
-        200
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿En qué ciudad se desarrolla principalmente Los Simpson?',
-        'Springfield',
-        200)">
-        200
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué grupo británico lanzó Bohemian Rhapsody?',
-        'Queen',
-        200)">
-        200
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿En qué deporte se utiliza el término home run?',
-        'Béisbol',
-        200)">
-        200
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuál es el centro de un átomo?',
-        'El núcleo',
-        200)">
-        200
-    </div>
-
-
-
-    <!-- 300 -->
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué instrumento se utiliza para medir la presión atmosférica?',
-        'Barómetro',
-        300)">
-        300
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué muro cayó en 1989?',
-        'El Muro de Berlín',
-        300)">
-        300
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué película popularizó la frase I’ll be back?',
-        'Terminator',
-        300)">
-        300
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué personaje dice Winter is coming en Game of Thrones?',
-        'La familia Stark',
-        300)">
-        300
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué cantante lanzó el álbum 21?',
-        'Adele',
-        300)">
-        300
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuántos anillos tiene el símbolo olímpico?',
-        '5',
-        300)">
-        300
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué fuerza mantiene a los planetas orbitando al Sol?',
-        'La gravedad',
-        300)">
-        300
-    </div>
-
-
-
-    <!-- 400 -->
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuál es el libro más vendido de la historia sin contar textos religiosos?',
-        'Don Quijote de la Mancha',
-        400)">
-        400
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué imperio tenía su capital en Constantinopla?',
-        'El Imperio Bizantino',
-        400)">
-        400
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Quién dirigió Pulp Fiction?',
-        'Quentin Tarantino',
-        400)">
-        400
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cómo se llama la cafetería de Friends?',
-        'Central Perk',
-        400)">
-        400
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué compositor quedó sordo durante los últimos años de su vida?',
-        'Ludwig van Beethoven',
-        400)">
-        400
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué país ganó el Mundial de fútbol de 2010?',
-        'España',
-        400)">
-        400
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuál es el hueso más largo del cuerpo humano?',
-        'El fémur',
-        400)">
-        400
-    </div>
-
-
-
-    <!-- 500 -->
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué filósofo fue maestro de Alejandro Magno?',
-        'Aristóteles',
-        500)">
-        500
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué tratado de 1919 puso oficialmente fin a la Primera Guerra Mundial con Alemania?',
-        'El Tratado de Versalles',
-        500)">
-        500
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Cuál fue la primera película de animación nominada al Oscar a Mejor Película?',
-        'La Bella y la Bestia',
-        500)">
-        500
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué actor interpreta a Thomas Shelby en Peaky Blinders?',
-        'Cillian Murphy',
-        500)">
-        500
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué banda lanzó The Dark Side of the Moon?',
-        'Pink Floyd',
-        500)">
-        500
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué atleta ganó ocho medallas de oro en una misma edición olímpica?',
-        'Michael Phelps',
-        500)">
-        500
-    </div>
-
-
-    <div class="puntos"
-        onclick="mostrarPregunta(this,
-        '¿Qué científico formuló las tres leyes del movimiento?',
-        'Isaac Newton',
-        500)">
-        500
-    </div>
-
+<div id="equipos">
+    <p style="color:#98a2b3;">Crea los equipos para comenzar.</p>
 </div>
 
+<div class="tablero-wrap">
+    <div class="tablero">
 
+        <!-- CATEGORÍAS -->
+        <div class="categoria">🌎<br>Cultura general</div>
+        <div class="categoria">🏛️<br>Historia</div>
+        <div class="categoria">🎬<br>Películas</div>
+        <div class="categoria">📺<br>Series</div>
+        <div class="categoria">🎵<br>Música</div>
+        <div class="categoria">⚽<br>Deportes</div>
+        <div class="categoria">🔬<br>Ciencia</div>
+        <div class="categoria">🌐<br>Geografía</div>
+        <div class="categoria">🇲🇽<br>México</div>
+        <div class="categoria">🦸<br>Marvel / DC</div>
+        <div class="categoria">🏰<br>Disney</div>
+        <div class="categoria">🎮<br>Videojuegos</div>
+        <div class="categoria">🧠<br>Tecnología</div>
+        <div class="categoria">🏆<br>Difíciles</div>
 
-<!-- =========================
-     MODAL PREGUNTA
-========================= -->
+        <!-- 100 -->
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el animal terrestre más grande del mundo?','El elefante africano.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué civilización construyó las pirámides de Giza?','Los antiguos egipcios.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama el león protagonista de El Rey León?','Simba.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿En qué ciudad viven principalmente Los Simpson?','Springfield.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Quién es conocido como el Rey del Rock and Roll?','Elvis Presley.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos minutos dura un partido de fútbol reglamentario, sin contar tiempo añadido?','90 minutos.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué gas necesitan los seres humanos para respirar?','Oxígeno.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el país más grande del mundo por superficie?','Rusia.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la capital de México?','Ciudad de México.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué superhéroe es conocido como el Hombre de Acero?','Superman.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama el muñeco vaquero de Toy Story?','Woody.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de videojuegos es un fontanero italiano?','Mario.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué significa CPU?','Unidad Central de Procesamiento.',100)">100</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos lados tiene un hexágono?','Seis.',100)">100</button>
 
-<div class="modal" id="modal">
+        <!-- 200 -->
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos huesos tiene aproximadamente un adulto humano?','206.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Quién fue el primer emperador romano?','Augusto.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?','Robert Downey Jr.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama la cafetería de Friends?','Central Perk.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué grupo británico lanzó Bohemian Rhapsody?','Queen.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿En qué deporte se utiliza el término home run?','Béisbol.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el centro de un átomo?','El núcleo.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el océano más grande del planeta?','El océano Pacífico.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la moneda oficial de México?','El peso mexicano.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué héroe de DC utiliza un escudo con una estrella?','Capitán América es de Marvel; la pregunta correcta sería: ¿qué héroe de DC usa un lazo mágico? Wonder Woman.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama la hermana de Elsa en Frozen?','Anna.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compañía creó la consola PlayStation?','Sony.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué empresa desarrolló el sistema operativo Windows?','Microsoft.',200)">200</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos planetas tiene el Sistema Solar?','Ocho.',200)">200</button>
 
-    <div class="pregunta">
+        <!-- 300 -->
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué instrumento se utiliza para medir la presión atmosférica?','Barómetro.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué muro cayó en 1989 y se convirtió en símbolo del fin de la Guerra Fría?','El Muro de Berlín.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película popularizó la frase I’ll be back?','Terminator.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Game of Thrones dice frecuentemente Winter is coming?','La familia Stark.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué cantante lanzó el álbum 21?','Adele.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos anillos tiene el símbolo de los Juegos Olímpicos?','Cinco.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué fuerza mantiene a los planetas orbitando alrededor del Sol?','La gravedad.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el río más largo de Sudamérica?','El Amazonas.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿En qué año inició la Independencia de México?','1810.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el nombre real de Batman?','Bruce Wayne.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película de Disney tiene a Simba como protagonista?','El Rey León.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué videojuego popularizó el personaje Creeper?','Minecraft.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué lenguaje se utiliza principalmente para estructurar una página web?','HTML.',300)">300</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el planeta más cercano al Sol?','Mercurio.',300)">300</button>
 
+        <!-- 400 -->
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué filósofo fue maestro de Alejandro Magno?','Aristóteles.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué imperio tenía su capital en Constantinopla?','El Imperio Bizantino.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Quién dirigió Pulp Fiction?','Quentin Tarantino.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpreta a Thomas Shelby en Peaky Blinders?','Cillian Murphy.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compositor quedó sordo durante los últimos años de su vida?','Ludwig van Beethoven.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué país ganó la Copa Mundial de fútbol de 2010?','España.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el hueso más largo del cuerpo humano?','El fémur.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué país tiene más husos horarios contando sus territorios?','Francia.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué presidente mexicano decretó la expropiación petrolera de 1938?','Lázaro Cárdenas.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpretó al Joker en The Dark Knight?','Heath Ledger.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Disney tiene como mascota un cangrejo llamado Sebastián?','Ariel.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compañía desarrolló Super Mario Bros.?','Nintendo.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué lenguaje de programación es conocido por su uso en desarrollo web y lleva el nombre de un café?','Java.',400)">400</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué partícula subatómica tiene carga negativa?','El electrón.',400)">400</button>
+
+        <!-- 500 -->
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué tratado firmado en 1919 puso oficialmente fin a la Primera Guerra Mundial con Alemania?','El Tratado de Versalles.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué civilización desarrolló la escritura cuneiforme?','Los sumerios.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál fue la primera película de animación nominada al Oscar a Mejor Película?','La Bella y la Bestia.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpreta a Walter White en Breaking Bad?','Bryan Cranston.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué banda lanzó The Dark Side of the Moon?','Pink Floyd.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué atleta ganó ocho medallas de oro en una misma edición de los Juegos Olímpicos?','Michael Phelps, en Beijing 2008.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué científico formuló las tres leyes del movimiento?','Isaac Newton.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la capital de Mongolia?','Ulán Bator.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué cultura construyó la ciudad de Chichén Itzá?','La civilización maya.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Marvel es conocido como el Hechicero Supremo?','Doctor Strange.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película de Disney fue la primera en ganar el Oscar a Mejor Película de Animación?','Toy Story 3.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué videojuego fue creado por Shigeru Miyamoto y debutó en 1981 con el personaje Jumpman?','Donkey Kong.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué protocolo se utiliza para transferir páginas web de forma segura?','HTTPS.',500)">500</button>
+        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el número atómico del oro?','79.',500)">500</button>
+
+    </div>
+</div>
+
+<!-- MODAL PREGUNTA -->
+<div class="modal-fondo" id="modal">
+    <div class="modal">
         <h2 id="valor"></h2>
+        <div class="pregunta" id="pregunta"></div>
 
-        <div
-            class="pregunta-texto"
-            id="pregunta">
+        <div class="respuesta" id="respuesta"></div>
+
+        <div class="botones-modal">
+            <button class="btn-respuesta" id="btnMostrarRespuesta" onclick="mostrarRespuesta()">
+                👁️ Mostrar respuesta
+            </button>
+
+            <button class="btn-correcto" id="btnCorrecto" onclick="respuestaCorrecta()">
+                ✅ Correcto
+            </button>
+
+            <button class="btn-incorrecto" id="btnIncorrecto" onclick="respuestaIncorrecta()">
+                ❌ Incorrecto
+            </button>
+
+            <button class="btn-cerrar" onclick="cerrarPregunta()">
+                ✖️ Cerrar
+            </button>
         </div>
-
-        <div
-            class="respuesta"
-            id="respuesta">
-        </div>
-
-
-        <button
-            class="btn-respuesta"
-            onclick="mostrarRespuesta()">
-
-            👁️ Mostrar respuesta
-
-        </button>
-
-
-        <button
-            class="btn-correcto"
-            id="btnCorrecto"
-            onclick="respuestaCorrecta()">
-
-            ✅ Correcto
-
-        </button>
-
-
-        <button
-            class="btn-incorrecto"
-            id="btnIncorrecto"
-            onclick="respuestaIncorrecta()">
-
-            ❌ Incorrecto
-
-        </button>
-
-
-        <button
-            class="btn-cerrar"
-            onclick="cerrarPregunta()">
-
-            ✖ Cerrar
-
-        </button>
-
     </div>
-
 </div>
 
-
-
-<!-- =========================
-     CONFIGURACIÓN EQUIPOS
-========================= -->
-
-<div id="configEquipos">
-
-    <div class="config">
-
+<!-- MODAL EQUIPOS -->
+<div class="modal-fondo" id="configEquipos">
+    <div class="config-modal">
         <h2>👥 Crear equipos</h2>
+        <p>Ingresa entre 2 y 6 equipos.</p>
 
-        <p>
-            Escribe el nombre de cada equipo.
-        </p>
-
-
-        <div class="campo-equipo">
-
-            <input
-                id="equipo1"
-                placeholder="Equipo 1">
-
+        <div class="inputs-equipos">
+            <input id="equipo1" placeholder="Equipo 1">
+            <input id="equipo2" placeholder="Equipo 2">
+            <input id="equipo3" placeholder="Equipo 3">
+            <input id="equipo4" placeholder="Equipo 4">
+            <input id="equipo5" placeholder="Equipo 5">
+            <input id="equipo6" placeholder="Equipo 6">
         </div>
 
+        <div class="config-botones">
+            <button class="btn-principal" onclick="crearEquipos()">
+                🚀 Comenzar
+            </button>
 
-        <div class="campo-equipo">
-
-            <input
-                id="equipo2"
-                placeholder="Equipo 2">
-
+            <button class="btn-cerrar" onclick="cerrarConfiguracion()">
+                Cancelar
+            </button>
         </div>
-
-
-        <div class="campo-equipo">
-
-            <input
-                id="equipo3"
-                placeholder="Equipo 3">
-
-        </div>
-
-
-        <div class="campo-equipo">
-
-            <input
-                id="equipo4"
-                placeholder="Equipo 4">
-
-        </div>
-
-
-        <div class="campo-equipo">
-
-            <input
-                id="equipo5"
-                placeholder="Equipo 5">
-
-        </div>
-
-
-        <div class="campo-equipo">
-
-            <input
-                id="equipo6"
-                placeholder="Equipo 6">
-
-        </div>
-
-
-        <button
-            class="btn-nuevo"
-            onclick="crearEquipos()">
-
-            🎮 Comenzar
-
-        </button>
-
-
-        <button
-            class="btn-cerrar"
-            onclick="cerrarConfiguracion()">
-
-            Cancelar
-
-        </button>
-
     </div>
-
 </div>
-
-
 
 <script>
+let equipos = [];
+let equipoActivo = 0;
+let respuestaActual = "";
+let puntosActuales = 0;
+let casillaActual = null;
 
-    /* =========================
-       VARIABLES DEL JUEGO
-    ========================= */
+function abrirConfiguracion(){
+    document.getElementById("configEquipos").style.display = "flex";
+}
 
-    let equipos = [];
+function cerrarConfiguracion(){
+    document.getElementById("configEquipos").style.display = "none";
+}
 
-    let equipoActivo = 0;
+function crearEquipos(){
 
-    let respuestaActual = "";
+    const nombres = [];
 
-    let puntosActuales = 0;
+    for(let i = 1; i <= 6; i++){
+        const nombre = document.getElementById("equipo" + i).value.trim();
 
-    let casillaActual = null;
-
-
-
-    /* =========================
-       ABRIR CONFIGURACIÓN
-    ========================= */
-
-    function abrirConfiguracion() {
-
-        document.getElementById(
-            "configEquipos"
-        ).style.display = "flex";
-
+        if(nombre){
+            nombres.push(nombre);
+        }
     }
 
-
-
-    /* =========================
-       CERRAR CONFIGURACIÓN
-    ========================= */
-
-    function cerrarConfiguracion() {
-
-        document.getElementById(
-            "configEquipos"
-        ).style.display = "none";
-
+    if(nombres.length < 2){
+        alert("Debes crear al menos 2 equipos.");
+        return;
     }
 
+    equipos = nombres.map(nombre => ({
+        nombre: nombre,
+        puntos: 0
+    }));
 
+    equipoActivo = 0;
 
-    /* =========================
-       CREAR EQUIPOS
-    ========================= */
+    actualizarMarcador();
+    cerrarConfiguracion();
+}
 
-    function crearEquipos() {
+function actualizarMarcador(){
 
-        equipos = [];
+    const contenedor = document.getElementById("equipos");
 
-        for (let i = 1; i <= 6; i++) {
+    contenedor.innerHTML = "";
 
-            let nombre =
-                document.getElementById(
-                    "equipo" + i
-                ).value.trim();
+    equipos.forEach((equipo, index) => {
 
+        const div = document.createElement("div");
 
-            if (nombre !== "") {
+        div.className = "equipo";
 
-                equipos.push({
-
-                    nombre: nombre,
-
-                    puntos: 0
-
-                });
-
-            }
-
+        if(index === equipoActivo){
+            div.classList.add("activo");
         }
 
+        div.innerHTML = `
+            <span class="turno">
+                ${index === equipoActivo ? "🎯 TURNO" : ""}
+            </span>
 
-        if (equipos.length < 2) {
+            <span class="nombre">
+                ${equipo.nombre}
+            </span>
 
-            alert(
-                "Debes crear al menos 2 equipos."
-            );
+            <span class="score">
+                ${equipo.puntos}
+            </span>
+        `;
 
-            return;
+        div.onclick = () => {
+            equipoActivo = index;
+            actualizarMarcador();
+        };
 
-        }
+        contenedor.appendChild(div);
+    });
+}
 
+function mostrarPregunta(elemento, pregunta, respuesta, puntos){
+
+    if(elemento.classList.contains("usado")){
+        return;
+    }
+
+    if(equipos.length === 0){
+        alert("Primero debes crear los equipos.");
+        return;
+    }
+
+    casillaActual = elemento;
+    respuestaActual = respuesta;
+    puntosActuales = puntos;
+
+    document.getElementById("valor").textContent =
+        puntos + " puntos";
+
+    document.getElementById("pregunta").textContent =
+        pregunta;
+
+    document.getElementById("respuesta").textContent =
+        respuesta;
+
+    document.getElementById("respuesta").style.display = "none";
+
+    document.getElementById("modal").style.display = "flex";
+}
+
+function mostrarRespuesta(){
+
+    document.getElementById("respuesta").style.display = "block";
+}
+
+function respuestaCorrecta(){
+
+    if(!equipos.length) return;
+
+    equipos[equipoActivo].puntos += puntosActuales;
+
+    finalizarPregunta();
+}
+
+function respuestaIncorrecta(){
+
+    if(!equipos.length) return;
+
+    equipos[equipoActivo].puntos -= puntosActuales;
+
+    finalizarPregunta();
+}
+
+function finalizarPregunta(){
+
+    if(casillaActual){
+        casillaActual.classList.add("usado");
+        casillaActual.disabled = true;
+    }
+
+    siguienteEquipo();
+    cerrarPregunta();
+    actualizarMarcador();
+}
+
+function siguienteEquipo(){
+
+    equipoActivo++;
+
+    if(equipoActivo >= equipos.length){
+        equipoActivo = 0;
+    }
+}
+
+function cerrarPregunta(){
+
+    document.getElementById("modal").style.display = "none";
+
+    respuestaActual = "";
+    puntosActuales = 0;
+    casillaActual = null;
+}
+
+function reiniciarJuego(){
+
+    if(equipos.length > 0){
+        equipos.forEach(equipo => {
+            equipo.puntos = 0;
+        });
 
         equipoActivo = 0;
-
         actualizarMarcador();
-
-        cerrarConfiguracion();
-
     }
 
-
-
-    /* =========================
-       MOSTRAR MARCADOR
-    ========================= */
-
-    function actualizarMarcador() {
-
-        const contenedor =
-            document.getElementById(
-                "equipos"
-            );
-
-
-        contenedor.innerHTML = "";
-
-
-        equipos.forEach(
-            (equipo, index) => {
-
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                div.className =
-                    "equipo";
-
-
-                if (
-                    index === equipoActivo
-                ) {
-
-                    div.classList.add(
-                        "activo"
-                    );
-
-                }
-
-
-                div.innerHTML = `
-
-                    <div class="nombre-equipo">
-                        ${equipo.nombre}
-                    </div>
-
-                    <div class="puntuacion">
-                        ${equipo.puntos}
-                    </div>
-
-                    <small>
-                        ${index === equipoActivo
-                            ? "🎯 Turno"
-                            : "Esperando"}
-                    </small>
-
-                `;
-
-
-                /*
-                 * Al hacer clic sobre un equipo
-                 * cambiamos el turno.
-                 */
-
-                div.onclick = function() {
-
-                    equipoActivo = index;
-
-                    actualizarMarcador();
-
-                };
-
-
-                contenedor.appendChild(div);
-
-            }
-        );
-
-    }
-
-
-
-    /* =========================
-       MOSTRAR PREGUNTA
-    ========================= */
-
-    function mostrarPregunta(
-        elemento,
-        pregunta,
-        respuesta,
-        puntos
-    ) {
-
-
-        /*
-         * Si la pregunta ya fue utilizada
-         * no hacemos nada.
-         */
-
-        if (
-            elemento.classList.contains(
-                "usado"
-            )
-        ) {
-
-            return;
-
-        }
-
-
-        /*
-         * Necesitamos equipos
-         */
-
-        if (equipos.length === 0) {
-
-            alert(
-                "Primero debes crear los equipos."
-            );
-
-            return;
-
-        }
-
-
-        casillaActual = elemento;
-
-        respuestaActual = respuesta;
-
-        puntosActuales = puntos;
-
-
-        document.getElementById(
-            "modal"
-        ).style.display = "flex";
-
-
-        document.getElementById(
-            "valor"
-        ).textContent =
-            puntos + " PUNTOS";
-
-
-        document.getElementById(
-            "pregunta"
-        ).textContent =
-            pregunta;
-
-
-        document.getElementById(
-            "respuesta"
-        ).style.display =
-            "none";
-
-
-        document.getElementById(
-            "respuesta"
-        ).textContent =
-            "";
-
-
-        document.getElementById(
-            "btnCorrecto"
-        ).style.display =
-            "none";
-
-
-        document.getElementById(
-            "btnIncorrecto"
-        ).style.display =
-            "none";
-
-    }
-
-
-
-    /* =========================
-       MOSTRAR RESPUESTA
-    ========================= */
-
-    function mostrarRespuesta() {
-
-
-        document.getElementById(
-            "respuesta"
-        ).textContent =
-            "✅ " + respuestaActual;
-
-
-        document.getElementById(
-            "respuesta"
-        ).style.display =
-            "block";
-
-
-        /*
-         * Después de revelar la respuesta
-         * aparecen los botones para evaluar.
-         */
-
-        document.getElementById(
-            "btnCorrecto"
-        ).style.display =
-            "inline-block";
-
-
-        document.getElementById(
-            "btnIncorrecto"
-        ).style.display =
-            "inline-block";
-
-    }
-
-
-
-    /* =========================
-       RESPUESTA CORRECTA
-    ========================= */
-
-    function respuestaCorrecta() {
-
-
-        if (!casillaActual) {
-
-            return;
-
-        }
-
-
-        /*
-         * Sumar puntos al equipo actual
-         */
-
-        equipos[equipoActivo].puntos
-            += puntosActuales;
-
-
-        /*
-         * Marcar pregunta como utilizada
-         */
-
-        casillaActual.classList.add(
-            "usado"
-        );
-
-
-        /*
-         * Actualizar marcador
-         */
-
-        actualizarMarcador();
-
-
-        cerrarPregunta();
-
-
-        /*
-         * Pasar automáticamente
-         * al siguiente equipo.
-         */
-
-        siguienteEquipo();
-
-    }
-
-
-
-    /* =========================
-       RESPUESTA INCORRECTA
-    ========================= */
-
-    function respuestaIncorrecta() {
-
-
-        if (!casillaActual) {
-
-            return;
-
-        }
-
-
-        /*
-         * Restar puntos
-         */
-
-        equipos[equipoActivo].puntos
-            -= puntosActuales;
-
-
-        /*
-         * Marcar pregunta como utilizada
-         */
-
-        casillaActual.classList.add(
-            "usado"
-        );
-
-
-        actualizarMarcador();
-
-
-        cerrarPregunta();
-
-
-        siguienteEquipo();
-
-    }
-
-
-
-    /* =========================
-       SIGUIENTE EQUIPO
-    ========================= */
-
-    function siguienteEquipo() {
-
-
-        equipoActivo++;
-
-
-        if (
-            equipoActivo >=
-            equipos.length
-        ) {
-
-            equipoActivo = 0;
-
-        }
-
-
-        actualizarMarcador();
-
-    }
-
-
-
-    /* =========================
-       CERRAR PREGUNTA
-    ========================= */
-
-    function cerrarPregunta() {
-
-        document.getElementById(
-            "modal"
-        ).style.display =
-            "none";
-
-    }
-
-
-
-    /* =========================
-       REINICIAR JUEGO
-    ========================= */
-
-    function reiniciarJuego() {
-
-
-        if (
-            !confirm(
-                "¿Quieres reiniciar toda la partida?"
-            )
-        ) {
-
-            return;
-
-        }
-
-
-        /*
-         * Reiniciar puntos
-         */
-
-        equipos.forEach(
-            equipo => {
-
-                equipo.puntos = 0;
-
-            }
-        );
-
-
-        /*
-         * Reactivar preguntas
-         */
-
-        document
-            .querySelectorAll(".puntos")
-            .forEach(
-                casilla => {
-
-                    casilla.classList.remove(
-                        "usado"
-                    );
-
-                }
-            );
-
-
-        equipoActivo = 0;
-
-
-        actualizarMarcador();
-
-    }
-
+    document.querySelectorAll(".puntos").forEach(casilla => {
+        casilla.classList.remove("usado");
+        casilla.disabled = false;
+    });
+
+    cerrarPregunta();
+}
 </script>
 
 </body>
-
 </html>
