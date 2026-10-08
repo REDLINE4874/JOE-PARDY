@@ -12,11 +12,17 @@
     padding:0;
 }
 
+html{
+    width:100%;
+    min-height:100%;
+}
+
 body{
     font-family:Arial,Helvetica,sans-serif;
     background:#101828;
     color:white;
     min-height:100vh;
+    overflow-x:hidden;
 }
 
 header{
@@ -61,9 +67,11 @@ button:hover{
     opacity:.88;
 }
 
+/* MARCADOR */
 #equipos{
     display:flex;
     justify-content:center;
+    align-items:stretch;
     gap:12px;
     flex-wrap:wrap;
     padding:18px 15px;
@@ -92,6 +100,7 @@ button:hover{
 
 .equipo .turno{
     display:block;
+    min-height:14px;
     color:#ffd166;
     font-size:12px;
     font-weight:bold;
@@ -109,42 +118,52 @@ button:hover{
     font-weight:bold;
 }
 
+/* TABLERO */
 .tablero-wrap{
     width:100%;
-    overflow-x:auto;
     padding:20px;
 }
 
 .tablero{
-    min-width:1250px;
     display:grid;
-    grid-template-columns:repeat(14,minmax(120px,1fr));
-    gap:7px;
+    grid-template-columns:repeat(14,minmax(115px,1fr));
+    gap:8px;
+    width:100%;
+}
+
+.columna-categoria{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-width:0;
 }
 
 .categoria{
     background:#0c447c;
-    padding:15px 7px;
-    min-height:75px;
+    min-height:78px;
+    padding:10px 6px;
     display:flex;
     justify-content:center;
     align-items:center;
     text-align:center;
     font-weight:bold;
-    border-radius:7px;
+    border-radius:8px;
     font-size:14px;
+    line-height:1.25;
 }
 
 .puntos{
-    min-height:85px;
+    width:100%;
+    min-height:78px;
     background:#185fa5;
     color:#ffd166;
     border:none;
-    border-radius:7px;
-    font-size:24px;
+    border-radius:8px;
+    font-size:23px;
     font-weight:bold;
     cursor:pointer;
     transition:.2s;
+    padding:8px;
 }
 
 .puntos:hover:not(.usado){
@@ -159,19 +178,25 @@ button:hover{
     opacity:.55;
 }
 
+/* MODALES */
 .modal-fondo{
     display:none;
     position:fixed;
     inset:0;
+    width:100%;
+    height:100%;
     background:rgba(0,0,0,.78);
     z-index:1000;
     justify-content:center;
     align-items:center;
     padding:20px;
+    overflow-y:auto;
 }
 
 .modal{
     width:min(700px,100%);
+    max-height:90vh;
+    overflow-y:auto;
     background:#172033;
     border-radius:16px;
     padding:28px;
@@ -189,6 +214,7 @@ button:hover{
     font-size:23px;
     line-height:1.4;
     margin-bottom:22px;
+    word-wrap:break-word;
 }
 
 .respuesta{
@@ -199,6 +225,7 @@ button:hover{
     margin-bottom:20px;
     font-size:20px;
     color:#8ff0b0;
+    word-wrap:break-word;
 }
 
 .botones-modal{
@@ -228,8 +255,11 @@ button:hover{
     color:white;
 }
 
+/* CONFIGURACIÓN */
 .config-modal{
     width:min(600px,100%);
+    max-height:90vh;
+    overflow-y:auto;
     background:#172033;
     border-radius:16px;
     padding:28px;
@@ -273,17 +303,171 @@ button:hover{
     margin-top:20px;
 }
 
-@media(max-width:700px){
-    .inputs-equipos{
-        grid-template-columns:1fr;
+/* LAPTOPS / TABLETS */
+@media(max-width:1400px){
+    .tablero{
+        grid-template-columns:repeat(7,minmax(130px,1fr));
+    }
+}
+
+@media(max-width:900px){
+    .tablero{
+        grid-template-columns:repeat(4,minmax(145px,1fr));
+    }
+
+    .tablero-wrap{
+        padding:15px;
+    }
+}
+
+/* CELULARES */
+@media(max-width:600px){
+    header{
+        padding:16px 12px;
+    }
+
+    h1{
+        font-size:30px;
+        margin-bottom:14px;
+    }
+
+    .controles{
+        flex-direction:column;
+        width:100%;
+        max-width:320px;
+        margin:auto;
+    }
+
+    .controles button{
+        width:100%;
+    }
+
+    #equipos{
+        padding:12px 8px;
+        gap:7px;
+    }
+
+    .equipo{
+        flex:1 1 125px;
+        min-width:115px;
+        padding:10px 12px;
+    }
+
+    .equipo .score{
+        font-size:22px;
+    }
+
+    .tablero-wrap{
+        padding:10px;
+    }
+
+    .tablero{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:7px;
+    }
+
+    .columna-categoria{
+        gap:6px;
+    }
+
+    .categoria{
+        min-height:64px;
+        font-size:12px;
+        padding:7px 4px;
+    }
+
+    .puntos{
+        min-height:56px;
+        font-size:20px;
+    }
+
+    .modal-fondo{
+        padding:10px;
     }
 
     .modal{
-        padding:20px;
+        width:100%;
+        max-height:94vh;
+        padding:18px;
+        border-radius:13px;
+    }
+
+    .modal h2{
+        font-size:27px;
+        margin-bottom:14px;
     }
 
     .modal .pregunta{
         font-size:19px;
+        margin-bottom:18px;
+    }
+
+    .respuesta{
+        font-size:18px;
+        padding:15px;
+    }
+
+    .botones-modal{
+        flex-direction:column;
+    }
+
+    .botones-modal button{
+        width:100%;
+    }
+
+    .config-modal{
+        padding:20px;
+    }
+
+    .inputs-equipos{
+        grid-template-columns:1fr;
+    }
+
+    .config-botones{
+        flex-direction:column;
+    }
+
+    .config-botones button{
+        width:100%;
+    }
+}
+
+/* CELULARES PEQUEÑOS */
+@media(max-width:380px){
+    h1{
+        font-size:26px;
+    }
+
+    .tablero{
+        gap:5px;
+    }
+
+    .categoria{
+        min-height:58px;
+        font-size:11px;
+    }
+
+    .puntos{
+        min-height:50px;
+        font-size:18px;
+        padding:5px;
+    }
+
+    .equipo{
+        flex-basis:105px;
+        min-width:105px;
+    }
+}
+
+/* TOUCH */
+@media(hover:none){
+    .puntos:hover:not(.usado){
+        background:#185fa5;
+        transform:none;
+    }
+
+    .equipo:hover{
+        transform:none;
     }
 }
 </style>
@@ -311,103 +495,118 @@ button:hover{
 
 <div class="tablero-wrap">
     <div class="tablero">
-
-        <!-- CATEGORÍAS -->
-        <div class="categoria">🌎<br>Cultura general</div>
-        <div class="categoria">🏛️<br>Historia</div>
-        <div class="categoria">🎬<br>Películas</div>
-        <div class="categoria">📺<br>Series</div>
-        <div class="categoria">🎵<br>Música</div>
-        <div class="categoria">⚽<br>Deportes</div>
-        <div class="categoria">🔬<br>Ciencia</div>
-        <div class="categoria">🌐<br>Geografía</div>
-        <div class="categoria">🇲🇽<br>México</div>
-        <div class="categoria">🦸<br>Marvel / DC</div>
-        <div class="categoria">🏰<br>Disney</div>
-        <div class="categoria">🎮<br>Videojuegos</div>
-        <div class="categoria">🧠<br>Tecnología</div>
-        <div class="categoria">🏆<br>Difíciles</div>
-
-        <!-- 100 -->
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el animal terrestre más grande del mundo?','El elefante africano.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué civilización construyó las pirámides de Giza?','Los antiguos egipcios.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama el león protagonista de El Rey León?','Simba.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿En qué ciudad viven principalmente Los Simpson?','Springfield.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Quién es conocido como el Rey del Rock and Roll?','Elvis Presley.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos minutos dura un partido de fútbol reglamentario, sin contar tiempo añadido?','90 minutos.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué gas necesitan los seres humanos para respirar?','Oxígeno.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el país más grande del mundo por superficie?','Rusia.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la capital de México?','Ciudad de México.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué superhéroe es conocido como el Hombre de Acero?','Superman.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama el muñeco vaquero de Toy Story?','Woody.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de videojuegos es un fontanero italiano?','Mario.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué significa CPU?','Unidad Central de Procesamiento.',100)">100</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos lados tiene un hexágono?','Seis.',100)">100</button>
-
-        <!-- 200 -->
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos huesos tiene aproximadamente un adulto humano?','206.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Quién fue el primer emperador romano?','Augusto.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?','Robert Downey Jr.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama la cafetería de Friends?','Central Perk.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué grupo británico lanzó Bohemian Rhapsody?','Queen.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿En qué deporte se utiliza el término home run?','Béisbol.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el centro de un átomo?','El núcleo.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el océano más grande del planeta?','El océano Pacífico.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la moneda oficial de México?','El peso mexicano.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué héroe de DC utiliza un escudo con una estrella?','Capitán América es de Marvel; la pregunta correcta sería: ¿qué héroe de DC usa un lazo mágico? Wonder Woman.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama la hermana de Elsa en Frozen?','Anna.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compañía creó la consola PlayStation?','Sony.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué empresa desarrolló el sistema operativo Windows?','Microsoft.',200)">200</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos planetas tiene el Sistema Solar?','Ocho.',200)">200</button>
-
-        <!-- 300 -->
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué instrumento se utiliza para medir la presión atmosférica?','Barómetro.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué muro cayó en 1989 y se convirtió en símbolo del fin de la Guerra Fría?','El Muro de Berlín.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película popularizó la frase I’ll be back?','Terminator.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Game of Thrones dice frecuentemente Winter is coming?','La familia Stark.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué cantante lanzó el álbum 21?','Adele.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos anillos tiene el símbolo de los Juegos Olímpicos?','Cinco.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué fuerza mantiene a los planetas orbitando alrededor del Sol?','La gravedad.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el río más largo de Sudamérica?','El Amazonas.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿En qué año inició la Independencia de México?','1810.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el nombre real de Batman?','Bruce Wayne.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película de Disney tiene a Simba como protagonista?','El Rey León.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué videojuego popularizó el personaje Creeper?','Minecraft.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué lenguaje se utiliza principalmente para estructurar una página web?','HTML.',300)">300</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el planeta más cercano al Sol?','Mercurio.',300)">300</button>
-
-        <!-- 400 -->
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué filósofo fue maestro de Alejandro Magno?','Aristóteles.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué imperio tenía su capital en Constantinopla?','El Imperio Bizantino.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Quién dirigió Pulp Fiction?','Quentin Tarantino.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpreta a Thomas Shelby en Peaky Blinders?','Cillian Murphy.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compositor quedó sordo durante los últimos años de su vida?','Ludwig van Beethoven.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué país ganó la Copa Mundial de fútbol de 2010?','España.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el hueso más largo del cuerpo humano?','El fémur.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué país tiene más husos horarios contando sus territorios?','Francia.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué presidente mexicano decretó la expropiación petrolera de 1938?','Lázaro Cárdenas.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpretó al Joker en The Dark Knight?','Heath Ledger.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Disney tiene como mascota un cangrejo llamado Sebastián?','Ariel.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compañía desarrolló Super Mario Bros.?','Nintendo.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué lenguaje de programación es conocido por su uso en desarrollo web y lleva el nombre de un café?','Java.',400)">400</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué partícula subatómica tiene carga negativa?','El electrón.',400)">400</button>
-
-        <!-- 500 -->
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué tratado firmado en 1919 puso oficialmente fin a la Primera Guerra Mundial con Alemania?','El Tratado de Versalles.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué civilización desarrolló la escritura cuneiforme?','Los sumerios.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál fue la primera película de animación nominada al Oscar a Mejor Película?','La Bella y la Bestia.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpreta a Walter White en Breaking Bad?','Bryan Cranston.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué banda lanzó The Dark Side of the Moon?','Pink Floyd.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué atleta ganó ocho medallas de oro en una misma edición de los Juegos Olímpicos?','Michael Phelps, en Beijing 2008.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué científico formuló las tres leyes del movimiento?','Isaac Newton.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la capital de Mongolia?','Ulán Bator.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué cultura construyó la ciudad de Chichén Itzá?','La civilización maya.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Marvel es conocido como el Hechicero Supremo?','Doctor Strange.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película de Disney fue la primera en ganar el Oscar a Mejor Película de Animación?','Toy Story 3.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué videojuego fue creado por Shigeru Miyamoto y debutó en 1981 con el personaje Jumpman?','Donkey Kong.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Qué protocolo se utiliza para transferir páginas web de forma segura?','HTTPS.',500)">500</button>
-        <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el número atómico del oro?','79.',500)">500</button>
-
+        <div class="columna-categoria">
+            <div class="categoria">🌎<br>Cultura general</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el animal terrestre más grande del mundo?','El elefante africano.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos huesos tiene aproximadamente un adulto humano?','206.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué instrumento se utiliza para medir la presión atmosférica?','Barómetro.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué filósofo fue maestro de Alejandro Magno?','Aristóteles.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué tratado firmado en 1919 puso oficialmente fin a la Primera Guerra Mundial con Alemania?','El Tratado de Versalles.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🏛️<br>Historia</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué civilización construyó las pirámides de Giza?','Los antiguos egipcios.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Quién fue el primer emperador romano?','Augusto.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué muro cayó en 1989 y se convirtió en símbolo del fin de la Guerra Fría?','El Muro de Berlín.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué imperio tenía su capital en Constantinopla?','El Imperio Bizantino.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué civilización desarrolló la escritura cuneiforme?','Los sumerios.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🎬<br>Películas</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama el león protagonista de El Rey León?','Simba.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?','Robert Downey Jr.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película popularizó la frase “I’ll be back”?','Terminator.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Quién dirigió Pulp Fiction?','Quentin Tarantino.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál fue la primera película de animación nominada al Oscar a Mejor Película?','La Bella y la Bestia.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">📺<br>Series</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿En qué ciudad viven principalmente Los Simpson?','Springfield.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama la cafetería de Friends?','Central Perk.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Game of Thrones dice frecuentemente “Winter is coming”?','La familia Stark.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpreta a Thomas Shelby en Peaky Blinders?','Cillian Murphy.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpreta a Walter White en Breaking Bad?','Bryan Cranston.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🎵<br>Música</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Quién es conocido como el Rey del Rock and Roll?','Elvis Presley.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué grupo británico lanzó Bohemian Rhapsody?','Queen.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué cantante lanzó el álbum 21?','Adele.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compositor quedó sordo durante los últimos años de su vida?','Ludwig van Beethoven.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué banda lanzó The Dark Side of the Moon?','Pink Floyd.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">⚽<br>Deportes</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos minutos dura un partido de fútbol reglamentario, sin contar tiempo añadido?','90 minutos.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿En qué deporte se utiliza el término home run?','Béisbol.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos anillos tiene el símbolo de los Juegos Olímpicos?','Cinco.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué país ganó la Copa Mundial de fútbol de 2010?','España.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué atleta ganó ocho medallas de oro en una misma edición de los Juegos Olímpicos?','Michael Phelps, en Beijing 2008.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🔬<br>Ciencia</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué gas necesitan los seres humanos para respirar?','Oxígeno.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el centro de un átomo?','El núcleo.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué fuerza mantiene a los planetas orbitando alrededor del Sol?','La gravedad.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el hueso más largo del cuerpo humano?','El fémur.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué científico formuló las tres leyes del movimiento?','Isaac Newton.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🌐<br>Geografía</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el país más grande del mundo por superficie?','Rusia.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el océano más grande del planeta?','El océano Pacífico.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el río más largo de Sudamérica?','El Amazonas.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué país tiene más husos horarios contando sus territorios?','Francia.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la capital de Mongolia?','Ulán Bator.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🇲🇽<br>México</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la capital de México?','Ciudad de México.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es la moneda oficial de México?','El peso mexicano.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿En qué año inició la Independencia de México?','1810.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué presidente mexicano decretó la expropiación petrolera de 1938?','Lázaro Cárdenas.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué cultura construyó la ciudad de Chichén Itzá?','La civilización maya.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🦸<br>Marvel / DC</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué superhéroe es conocido como el Hombre de Acero?','Superman.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué heroína de DC utiliza un lazo mágico?','Wonder Woman.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el nombre real de Batman?','Bruce Wayne.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué actor interpretó al Joker en The Dark Knight?','Heath Ledger.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Marvel es conocido como el Hechicero Supremo?','Doctor Strange.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🏰<br>Disney</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama el muñeco vaquero de Toy Story?','Woody.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cómo se llama la hermana de Elsa en Frozen?','Anna.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película de Disney tiene a Simba como protagonista?','El Rey León.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de Disney tiene como mascota un cangrejo llamado Sebastián?','Ariel.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué película de Disney fue la primera en ganar el Oscar a Mejor Película de Animación?','Toy Story 3.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🎮<br>Videojuegos</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué personaje de videojuegos es un fontanero italiano?','Mario.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compañía creó la consola PlayStation?','Sony.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué videojuego popularizó al personaje Creeper?','Minecraft.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué compañía desarrolló Super Mario Bros.?','Nintendo.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué videojuego fue creado por Shigeru Miyamoto y debutó en 1981 con el personaje Jumpman?','Donkey Kong.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🧠<br>Tecnología</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué significa CPU?','Unidad Central de Procesamiento.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué empresa desarrolló el sistema operativo Windows?','Microsoft.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué lenguaje se utiliza principalmente para estructurar una página web?','HTML.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué lenguaje de programación es conocido por su uso en desarrollo web y lleva el nombre de un café?','Java.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué protocolo se utiliza para transferir páginas web de forma segura?','HTTPS.',500)">500</button>
+        </div>
+        <div class="columna-categoria">
+            <div class="categoria">🏆<br>Preguntas difíciles</div>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos lados tiene un hexágono?','Seis.',100)">100</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuántos planetas tiene el Sistema Solar?','Ocho.',200)">200</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el planeta más cercano al Sol?','Mercurio.',300)">300</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Qué partícula subatómica tiene carga negativa?','El electrón.',400)">400</button>
+            <button class="puntos" onclick="mostrarPregunta(this,'¿Cuál es el número atómico del oro?','79.',500)">500</button>
+        </div>
     </div>
 </div>
 
